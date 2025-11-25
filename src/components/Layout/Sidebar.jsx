@@ -1,15 +1,37 @@
 import React, { useState } from 'react'
 import { GroupIcon, Home, HomeIcon, Menu, X } from 'lucide-react';
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
+import { useContext } from 'react';
+import { userContext } from '../../context/UserProvider';
+import { useEffect } from 'react';
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const api_url = import.meta.env.VITE_API_URL;
+  const [loading, setLoading] = useState(true)
+  const {user} = useContext(userContext);
 
   const links = [
     { name: "Home", link: "/", icon: HomeIcon },
     { name: "Public Boards", link: "/boards", icon: GroupIcon },
   ]
+
+  const location = useLocation();
+
+  function isEmpty(obj) {
+    for (const prop in obj) {
+      if (Object.hasOwn(obj, prop)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  useEffect(()=>{
+    if (!isEmpty(user)){
+      setLoading(false);
+    }
+  }, [user])
 
   return (
     <>
@@ -51,7 +73,7 @@ const Sidebar = () => {
                   <Link 
                     key={index}
                     to={item.link} 
-                    className='flex gap-2 text-lg sm:text-xl items-center hover:bg-white/10 p-2 rounded-md transition-colors'
+                    className={`flex gap-2 text-lg sm:text-xl items-center ${item.link==location.pathname?'bg-white/90 text-black':'hover:bg-white/10'} p-2 rounded-md transition-colors`}
                     onClick={() => setIsOpen(false)}
                   >
                     <Icon size={20} /> {item.name}
@@ -65,9 +87,14 @@ const Sidebar = () => {
             <div className='w-16 h-16 sm:w-20 sm:h-20 lg:w-1/4 lg:h-full bg-white/50 rounded-lg profile-image flex-shrink-0'></div>
 
             <div className='text-sm sm:text-base'>
-              <h1>Reputation: 10</h1>
-              <h1>Public Boards: 2</h1>
-              <h1>Private Boards: 1</h1>
+              {loading?
+              <><h1>Reputation: {0}</h1>
+              <h1>Public Boards: {0}</h1>
+              <h1>Private Boards: {0}</h1></>
+              :
+              <><h1>Reputation: {user.reputation || 0}</h1>
+              <h1>Public Boards: {user.publicBoards.length || 0}</h1>
+              <h1>Private Boards: {user.privateBoards.length || 0}</h1></>}
             </div>
           </section>
 

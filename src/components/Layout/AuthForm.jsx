@@ -3,7 +3,7 @@ import axios from "axios";
 import { userContext } from "../../context/UserProvider";
 
 export default function AuthForm({ onSuccess }) {
-    const { authMode } = useContext(userContext);
+    const { authMode, getUser } = useContext(userContext);
     const [password, setPassword] = useState("");
     const API = import.meta.env.VITE_API_URL;
 
@@ -18,6 +18,9 @@ export default function AuthForm({ onSuccess }) {
             if (res.data?.clientToken) {
                 localStorage.setItem("clientToken", res.data.clientToken);
                 if (onSuccess) onSuccess(res.data.clientToken);
+                console.log(res)
+                getUser();
+                
             } else {
                 alert(res.data.error || "Something went wrong");
             }
