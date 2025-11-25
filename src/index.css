@@ -1,1 +1,16 @@
 @import 'tailwindcss';
+
+@font-face {
+    font-family: instru-sans;
+    src: url("/fonts/InstrumentSans-Regular.ttf");
+}
+
+@font-face {
+    font-family: instru-serif;
+    src: url("/fonts/InstrumentSerif-Regular.ttf");
+}
+
+@theme{
+    --font-sans: 'instru-sans';
+    --font-serif: 'instru-serif';
+}
