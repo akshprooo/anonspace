@@ -17,21 +17,13 @@ const Sidebar = () => {
 
   const location = useLocation();
 
-  function isEmpty(obj) {
-    for (const prop in obj) {
-      if (Object.hasOwn(obj, prop)) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
   useEffect(()=>{
-    if (!isEmpty(user)){
-      setLoading(false);
+    if (user.reputation==undefined){
+      setLoading(true);
+    }else{
+      setLoading(false)
     }
-  }, [user])
+  })
 
   return (
     <>
@@ -94,7 +86,8 @@ const Sidebar = () => {
               :
               <><h1>Reputation: {user.reputation || 0}</h1>
               <h1>Public Boards: {user.publicBoards.length || 0}</h1>
-              <h1>Private Boards: {user.privateBoards.length || 0}</h1></>}
+              <h1>Private Boards: {user.privateBoards.length || 0}</h1></>
+              }
             </div>
           </section>
 

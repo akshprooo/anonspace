@@ -1,16 +1,19 @@
 import axios from 'axios';
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
+import { userContext } from '../../context/UserProvider';
 
 const BoardsMain = () => {
 
   const clientToken = localStorage.getItem('clientToken');
   const api_url = import.meta.env.VITE_API_URL;
+  const {user, setUser} = useContext(userContext);
 
   const getPublicBoards = async ()=>{
     const res = await axios.get(api_url+'/api/boards/get', {headers: {
-      "x-client-token": clientToken
+      "x-client-token": clientToken,
     }})
-    console.log(res);
+    // setUser(res.data)
+    console.log(res)
   }
 
   useEffect(()=>{

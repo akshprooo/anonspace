@@ -18,7 +18,6 @@ export default function AuthForm({ onSuccess }) {
             if (res.data?.clientToken) {
                 localStorage.setItem("clientToken", res.data.clientToken);
                 if (onSuccess) onSuccess(res.data.clientToken);
-                console.log(res)
                 getUser();
                 
             } else {

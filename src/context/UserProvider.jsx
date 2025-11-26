@@ -13,6 +13,7 @@ const UserProvider = ({ children }) => {
     const getUser = async ()=>{
         const res = await axios.post(api_url+'/api/auth/getuser', {clientToken});
         setUser(res.data);
+        console.log('getUser res:', res)
     }
 
     useEffect(() => {
@@ -26,13 +27,9 @@ const UserProvider = ({ children }) => {
         }
     });
 
-    useEffect(()=>{
-        console.log(user);
-    }, [user])
-
     return (
         <userContext.Provider
-            value={{ clientToken, setClientToken, loggedin, setLoggedin, authMode, user, getUser }}
+            value={{ clientToken, setClientToken, loggedin, setLoggedin, authMode, user, getUser, setUser }}
         >
             {children}
         </userContext.Provider>
