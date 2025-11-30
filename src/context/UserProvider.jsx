@@ -13,7 +13,7 @@ const UserProvider = ({ children }) => {
     const getUser = async ()=>{
         const res = await axios.post(api_url+'/api/auth/getuser', {clientToken});
         setUser(res.data);
-        console.log('getUser res:', res)
+        console.log(res)
     }
 
     useEffect(() => {
@@ -25,7 +25,7 @@ const UserProvider = ({ children }) => {
         } else {
             setAuthMode("register");
         }
-    });
+    }, []);
 
     return (
         <userContext.Provider

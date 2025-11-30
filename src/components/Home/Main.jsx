@@ -1,11 +1,23 @@
-import React from 'react'
+import React, { useState } from 'react';
+import BoardCard from '../AllBoards/BoardCard';
+import CreateBoardModal from '../CreateBoardModal';
+import { Plus } from 'lucide-react';
 
-const HomeMain = () => {
+const HomeMain = ({ boards }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [localBoards, setLocalBoards] = useState(boards);
+
+  const handleBoardCreated = (newBoard) => {
+    setLocalBoards([newBoard, ...localBoards]);
+  };
+
   return (
-    <div className='w-full lg:w-3/4 min-h-screen lg:pl-1 lg:p-3'>
-        <main className='h-full w-full lg:border-2 lg:rounded-lg lg:border-white/30'></main>
-    </div>
-  )
-}
+    <>
+      <div className='w-full min-h-screen p-4 sm:p-6 lg:p-8'>
+        
+      </div>
+    </>
+  );
+};
 
-export default HomeMain
+export default HomeMain;

@@ -4,11 +4,14 @@ import './index.css'
 import App from './App.jsx'
 import {BrowserRouter} from 'react-router-dom'
 import UserProvider from './context/UserProvider.jsx'
+import PublicBoardsProvider from './context/PublicBoardsProvider.jsx'
 
 createRoot(document.getElementById('root')).render(
   <UserProvider>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <PublicBoardsProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </PublicBoardsProvider>
   </UserProvider>
 )
