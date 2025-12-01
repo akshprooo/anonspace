@@ -1,20 +1,20 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Users, Calendar, UserPlus, Check } from "lucide-react";
+import { Users, Calendar, UserPlus, Check, Lock } from "lucide-react";
 import axios from "axios";
 import { userContext } from "../../context/UserProvider";
-import { PublicBoardsContext } from "../../context/PublicBoardsProvider";
 
-const BoardCard = ({ board }) => {
-  const { user,getUser } = useContext(userContext);
-  const {getPublicBoards} = useContext(PublicBoardsContext);
+const BoardCard = ({ board, boardType = 'public' }) => {
+  const { user } = useContext(userContext);
   
   const [isJoined, setIsJoined] = useState(false);
   const [loading, setLoading] = useState(false);
   const [memberCount, setMemberCount] = useState(board.members?.length || 0);
 
   useEffect(() => {
-    if (user && user.publicBoards && Array.isArray(user.publicBoards)) {
-      setIsJoined(user.publicBoards.includes(board._id));
+    if (user && Array.isArray(user.publicBoards) && Array.isArray(user.privateBoards)) {
+      const inPublic = user.publicBoards.includes(board._id);
+      const inPrivate = user.privateBoards.includes(board._id);
+      setIsJoined(inPublic || inPrivate);
     }
   }, [user, board._id]);
 
@@ -23,20 +23,17 @@ const BoardCard = ({ board }) => {
     
     if (loading || isJoined) return;
     
+    // Only allow joining public boards from the card
+    if (boardType === 'private') return;
+    
     setLoading(true);
     try {
-      await axios.post(import.meta.env.VITE_API_URL+'/api/boards/join/public', {
+      await axios.post('/api/boards/join/public', {
         boardId: board._id
-      }, {
-        headers:{
-          "x-client-token":localStorage.getItem('clientToken')
-        }
       });
 
       setIsJoined(true);
       setMemberCount(prev => prev + 1);
-      getUser();
-      getPublicBoards();
     } catch (err) {
       console.error('Failed to join board:', err);
       alert(err.response?.data?.error || 'Failed to join board');
@@ -44,6 +41,8 @@ const BoardCard = ({ board }) => {
       setLoading(false);
     }
   };
+
+  const isPrivate = boardType === 'private' || board.boardKey !== undefined;
 
   return (
     <div
@@ -57,35 +56,43 @@ const BoardCard = ({ board }) => {
     >
       <div className="flex flex-col gap-3 flex-grow">
         <div className="flex items-start justify-between gap-2">
-          <h2 className="text-xl font-medium tracking-wide group-hover:text-white/90 transition-colors line-clamp-2 flex-grow">
-            {board.name}
-          </h2>
-          
-          <button
-            onClick={handleJoin}
-            disabled={loading || isJoined}
-            className={`
-              flex items-center gap-1 px-3 py-1.5 rounded-md text-sm font-medium
-              transition-all flex-shrink-0
-              ${isJoined
-                ? 'bg-white/10 text-white/60 cursor-default'
-                : 'bg-white text-black hover:bg-white/90 hover:scale-105'
-              }
-              disabled:opacity-50 disabled:cursor-not-allowed
-            `}
-          >
-            {isJoined ? (
-              <>
-                <Check size={14} />
-                <span>Joined</span>
-              </>
-            ) : (
-              <>
-                <UserPlus size={14} />
-                <span>Join</span>
-              </>
+          <div className="flex items-center gap-2 flex-grow min-w-0">
+            {isPrivate && (
+              <Lock size={18} className="flex-shrink-0 text-white/60" />
             )}
-          </button>
+            <h2 className="text-xl font-medium tracking-wide group-hover:text-white/90 transition-colors line-clamp-2">
+              {board.name}
+            </h2>
+          </div>
+          
+          {/* Only show join button for public boards */}
+          {!isPrivate && (
+            <button
+              onClick={handleJoin}
+              disabled={loading || isJoined}
+              className={`
+                flex items-center gap-1 px-3 py-1.5 rounded-md text-sm font-medium
+                transition-all flex-shrink-0
+                ${isJoined
+                  ? 'bg-white/10 text-white/60 cursor-default'
+                  : 'bg-white text-black hover:bg-white/90 hover:scale-105'
+                }
+                disabled:opacity-50 disabled:cursor-not-allowed
+              `}
+            >
+              {isJoined ? (
+                <>
+                  <Check size={14} />
+                  <span>Joined</span>
+                </>
+              ) : (
+                <>
+                  <UserPlus size={14} />
+                  <span>Join</span>
+                </>
+              )}
+            </button>
+          )}
         </div>
 
         <div className="flex flex-col gap-2 text-sm mt-auto">

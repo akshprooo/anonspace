@@ -10,7 +10,7 @@ const Sidebar = () => {
 
   const links = [
     { name: "Home", link: "/", icon: Home },
-    { name: "Public Boards", link: "/boards", icon: Users },
+    { name: "All Boards", link: "/boards", icon: Users },
   ];
 
   const location = useLocation();
