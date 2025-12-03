@@ -17,9 +17,6 @@ const BoardsMain = ({ boards }) => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
 
-  // ---------------------------------------------
-  // Fetch private boards
-  // ---------------------------------------------
   useEffect(() => {
     if (!user || !user.privateBoards || user.privateBoards.length === 0) {
       setPrivateBoards([]);
@@ -47,10 +44,7 @@ const BoardsMain = ({ boards }) => {
 
     fetchPrivateBoards();
   }, [user]);
-
-  // ---------------------------------------------
-  // Handlers
-  // ---------------------------------------------
+  
   const handleBoardCreated = () => {
     getUser();
   };
@@ -121,7 +115,7 @@ const BoardsMain = ({ boards }) => {
           {activeTab === "public" && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {publicBoards.map(board => (
-                <BoardCard key={board._id} board={board} type="public" />
+                <BoardCard key={board._id} board={board} boardType="public" />
               ))}
 
               {publicBoards.length === 0 && (
@@ -139,7 +133,7 @@ const BoardsMain = ({ boards }) => {
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                   {privateBoards.map(board => (
-                    <BoardCard key={board._id} board={board} type="private" />
+                    <BoardCard key={board._id} board={board} boardType="private" />
                   ))}
 
                   {privateBoards.length === 0 && (

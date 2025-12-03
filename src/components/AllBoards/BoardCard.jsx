@@ -1,7 +1,8 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Users, Calendar, UserPlus, Check, Lock } from "lucide-react";
+import { Users, Calendar, UserPlus, Check, Lock, Link } from "lucide-react";
 import axios from "axios";
 import { userContext } from "../../context/UserProvider";
+import { useNavigate } from "react-router-dom";
 
 const BoardCard = ({ board, boardType = 'public' }) => {
   const { user } = useContext(userContext);
@@ -9,6 +10,8 @@ const BoardCard = ({ board, boardType = 'public' }) => {
   const [isJoined, setIsJoined] = useState(false);
   const [loading, setLoading] = useState(false);
   const [memberCount, setMemberCount] = useState(board.members?.length || 0);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (user && Array.isArray(user.publicBoards) && Array.isArray(user.privateBoards)) {
@@ -53,8 +56,16 @@ const BoardCard = ({ board, boardType = 'public' }) => {
         transition-all duration-300 cursor-pointer
         group h-full flex flex-col
       "
+
+      onClick={()=>{
+        if (isPrivate){
+          navigate(`/board/private/${board._id}`);
+        }else{
+          navigate(`/board/public/${board._id}`);
+        }
+      }}
     >
-      <div className="flex flex-col gap-3 flex-grow">
+      <div className="flex flex-col gap-3 grow">
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-center gap-2 flex-grow min-w-0">
             {isPrivate && (
@@ -100,6 +111,16 @@ const BoardCard = ({ board, boardType = 'public' }) => {
             <Users size={16} className="flex-shrink-0" />
             <span>{memberCount} {memberCount === 1 ? 'Member' : 'Members'}</span>
           </div>
+
+          {
+            isPrivate?(
+              <div className="flex items-center gap-2 text-white/60">
+                <Link size={16} /> {board._id}
+              </div>
+            )
+            :
+            ''
+          }
 
           <div className="flex items-center gap-2 text-white/40 group-hover:text-white/50 transition-colors">
             <Calendar size={16} className="flex-shrink-0" />
