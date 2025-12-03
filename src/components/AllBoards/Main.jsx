@@ -32,9 +32,10 @@ const BoardsMain = ({ boards }) => {
         );
 
         const responses = await Promise.all(requests);
-        const result = responses.map(r => r.data.board);
+        const result = responses.map(r => r.data);
 
         setPrivateBoards(result);
+        console.log(responses);
       } catch (err) {
         console.log("Error fetching private boards:", err);
       } finally {
@@ -133,7 +134,7 @@ const BoardsMain = ({ boards }) => {
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                   {privateBoards.map(board => (
-                    <BoardCard key={board._id} board={board} boardType="private" />
+                    <BoardCard board={board} boardType="private" />
                   ))}
 
                   {privateBoards.length === 0 && (
